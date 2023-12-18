@@ -3,15 +3,15 @@ name: Deploy to lambda
 on:
   workflow_dispatch:
 
-env:
-  JAVASCRIPT_SRC_DIR: ./aws/lambda
-  PACKAGE_DIR: ./aws/lambda/dist
-  PACKAGE_NAME: github_webhook_lambda.zip
-  TERRAFORM_DIR: aws/terraform
-
 jobs:
   lambda:
     runs-on: ubuntu-latest
+
+    env:
+      JAVASCRIPT_SRC_DIR: ./aws/lambda
+      PACKAGE_DIR: ./aws/lambda/dist
+      PACKAGE_NAME: github_webhook_lambda.zip
+      TERRAFORM_DIR: aws/terraform
 
     outputs:
       api_gateway_endpoint: ${{ steps.outputs.outputs.api_gateway_endpoint }}
@@ -53,6 +53,7 @@ jobs:
 
     env:
       GITHUB_TOKEN: ${{ secrets.ORG_GITHUB_TOKEN }}
+      TERRAFORM_DIR: github/terraform
 
     steps:
 

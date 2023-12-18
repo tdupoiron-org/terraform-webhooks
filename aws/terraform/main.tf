@@ -23,7 +23,7 @@ resource "aws_lambda_function" "lambda_function" {
   filename         = "${path.module}/${var.package_path}/${var.package_name}"
   source_code_hash = filebase64sha256("${path.module}/${var.package_path}/${var.package_name}")
 
-  handler = "app.js"
+  handler = "index.handler"
   runtime = "nodejs18.x"
 
   tags = {
@@ -44,7 +44,8 @@ resource "aws_apigatewayv2_api" "api_gateway" {
 
 resource "aws_apigatewayv2_stage" "api_gateway_stage" {
   api_id = aws_apigatewayv2_api.api_gateway.id
-  name   = "events"
+  name   = "github"
+  auto_deploy = true
   tags = {
     Name  = "tdupoiron_github_webhook_api_gateway_stage"
     Owner = var.owner
@@ -55,7 +56,7 @@ resource "aws_lambda_permission" "api_gateway_lambda_permission" {
   action        = "lambda:InvokeFunction"
   function_name = aws_lambda_function.lambda_function.function_name
   principal     = "apigateway.amazonaws.com"
-  source_arn    = "${aws_apigatewayv2_api.api_gateway.execution_arn}/*/*"
+  source_arn    = "${aws_apigatewayv2_api.api_gateway.execution_arn}/*/*/events"
 }
 
 resource "aws_apigatewayv2_integration" "api_gateway_lambda_integration" {
@@ -66,6 +67,6 @@ resource "aws_apigatewayv2_integration" "api_gateway_lambda_integration" {
 
 resource "aws_apigatewayv2_route" "api_gateway_route" {
   api_id    = aws_apigatewayv2_api.api_gateway.id
-  route_key = "ANY /"
+  route_key = "ANY /events"
   target    = "integrations/${aws_apigatewayv2_integration.api_gateway_lambda_integration.id}"
 }

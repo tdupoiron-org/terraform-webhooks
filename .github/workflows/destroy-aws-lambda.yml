@@ -1,7 +1,8 @@
-name: Destroy lambda
+name: Destroy AWS lambda
 
 on:
-  workflow_dispatch:
+  schedule:
+    - cron: '0 0 * * *'
 
 jobs:
   github:

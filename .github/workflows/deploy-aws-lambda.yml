@@ -1,4 +1,4 @@
-name: Deploy to lambda
+name: Deploy AWS lambda
 
 on:
   workflow_dispatch:

@@ -1,0 +1,14 @@
+{
+  "name": "github-webhooks",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "build": "ncc build app.js --license licenses.txt -o dist"
+  },
+  "author": "tdupoiron",
+  "license": "ISC",
+  "devDependencies": {
+    "@vercel/ncc": "^0.38.1"
+  }
+}

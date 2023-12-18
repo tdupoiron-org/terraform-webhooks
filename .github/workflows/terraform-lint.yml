@@ -1,0 +1,20 @@
+name: 'Terraform lint'
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  terraform-lint:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Terraform-Lint
+      uses: actionshub/terraform-lint@2.0.1

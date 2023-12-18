@@ -1,0 +1,44 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository (PR)
+      if: github.event_name == 'pull_request'
+      uses: actions/checkout@v4
+      with:
+        ref: ${{ github.event.pull_request.head.ref }}
+
+    - name: Checkout repository (Push)
+      if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
+      uses: actions/checkout@v4
+
+    - name: Use Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: 20
+
+    - name: Build action
+      run: |
+        cd aws/lambda
+        npm install
+        npm run build
+
+        if [ "$(git diff --ignore-all-space actions-dist/ | wc -l)" -gt "0" ]; then
+          echo "OVH: Detected uncommitted changes after build."
+          git config user.name "GHES build bot"
+          git config user.email "ghes-bot@github.com"
+          git --no-pager diff --name-only --ignore-all-space actions-dist/
+          git add -A
+          git commit -s -m "Built actions-dist/index.js"
+          git push
+        else
+          echo "OVH: No uncommitted changes after build."
+        fi

@@ -14,8 +14,8 @@ jobs:
       TERRAFORM_DIR: aws/terraform
 
     outputs:
-      api_gateway_endpoint: ${{ steps.outputs.outputs.api_gateway_endpoint }}
-      api_gateway_stage_name: ${{ steps.outputs.outputs.api_gateway_stage_name }}
+      api_gateway_endpoint: ${{ steps.outputs.deploy.api_gateway_endpoint }}
+      api_gateway_stage_name: ${{ steps.outputs.deploy.api_gateway_stage_name }}
 
     steps:
       - uses: actions/checkout@v4

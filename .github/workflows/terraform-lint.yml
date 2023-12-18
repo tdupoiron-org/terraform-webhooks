@@ -18,3 +18,5 @@ jobs:
 
     - name: Terraform-Lint
       uses: actionshub/terraform-lint@2.0.1
+      with:
+        path: './aws/terraform'

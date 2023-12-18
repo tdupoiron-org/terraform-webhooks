@@ -1,6 +1,7 @@
 name: deploy to lambda
 
-on: [push]
+on:
+  workflow_dispatch:
 
 jobs:
   deploy_source:
@@ -19,11 +20,12 @@ jobs:
       - name: npm install and build
         run: |
           npm run build
+        working-directory: ./aws/lambda
 
       - name: zip
         uses: montudor/action-zip@v1.0.0
         with:
-          args: zip -qq -r ./bundle.zip ./
+          args: zip -qq -r ./aws/lambda/dist/github_webhook_lambda.zip ./aws/lambda
 
       - name: default deploy
         uses: appleboy/lambda-action@master

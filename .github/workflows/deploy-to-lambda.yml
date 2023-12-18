@@ -10,9 +10,7 @@ env:
   TERRAFORM_DIR: aws/terraform
 
 jobs:
-  terraform:
-    name: terraform
-
+  lambda:
     runs-on: ubuntu-latest
 
     steps:
@@ -42,3 +40,9 @@ jobs:
           terraform init -backend-config=backend.conf
           terraform plan -out=tfplan
           terraform apply -auto-approve tfplan
+
+      - name: Get Gateway URL
+        id: gateway
+        run: |
+          echo "::set-output name=url::$(terraform output -raw api_endpoint)"
+          echo "::set-output name=url::$(terraform output -raw api_gateway_stage_name)"

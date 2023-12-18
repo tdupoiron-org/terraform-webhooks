@@ -44,6 +44,7 @@ jobs:
           terraform init -backend-config=backend.conf -reconfigure
           terraform plan -out=tfplan
           terraform apply -auto-approve tfplan
+          echo "api_gateway_endpoint=$(terraform output -raw api_gateway_endpoint)"
           echo "api_gateway_endpoint=$(terraform output -raw api_gateway_endpoint)" >> "$GITHUB_OUTPUT"
           echo "api_gateway_stage_name=$(terraform output -raw api_gateway_stage_name)" >> "$GITHUB_OUTPUT"
 

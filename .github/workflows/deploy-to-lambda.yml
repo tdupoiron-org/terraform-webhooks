@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  deploy_source:
+  terraform:
     name: build and deploy lambda
 
     runs-on: ubuntu-latest
@@ -12,26 +12,27 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Use Node.js 18
-        uses: actions/setup-node@v4
-        with:
-          node-version: 18
-
-      - name: npm install and build
-        run: |
-          npm run build
-        working-directory: ./aws/lambda
-
       - name: zip
         uses: montudor/action-zip@v1.0.0
         with:
           args: zip -qq -r ./aws/lambda/dist/github_webhook_lambda.zip ./aws/lambda
 
-      - name: default deploy
-        uses: appleboy/lambda-action@master
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
         with:
-          aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws_region: eu-west-3
-          function_name: tdupoiron_github_webhook_lambda
-          zip_file: github_webhook_lambda.zip
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: eu-west-3
+
+      - name: Install Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.0.0
+
+      - name: Terraform apply
+        id: deploy
+        working-directory: aws
+        run: | 
+          terraform init -backend-config=backend.conf
+          terraform plan -out=tfplan
+          terraform apply tfplan

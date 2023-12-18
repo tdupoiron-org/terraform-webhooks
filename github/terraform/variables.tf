@@ -8,4 +8,5 @@ variable "organization" {
 
 variable "webhook_url" {
   type = string
+  default = "https://dummy.com"
 }

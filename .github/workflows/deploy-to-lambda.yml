@@ -41,7 +41,7 @@ jobs:
         id: deploy
         working-directory: ${{ env.TERRAFORM_DIR }}
         run: | 
-          terraform init -backend-config=backend.conf
+          terraform init -backend-config=backend.conf -reconfigure
           terraform plan -out=tfplan
           terraform apply -auto-approve tfplan
           echo "api_gateway_endpoint=$(terraform output -raw api_gateway_endpoint)" >> "$GITHUB_OUTPUT"
@@ -74,8 +74,8 @@ jobs:
         id: deploy
         working-directory: ${{ env.TERRAFORM_DIR }}
         run: | 
-          terraform init -backend-config=backend.conf
-          terraform plan -out=tfplan
+          terraform init -backend-config=backend.conf -reconfigure
+          terraform plan -var "webhook_url=${{ needs.lambda.outputs.api_gateway_endpoint }}" -out=tfplan
           terraform apply -auto-approve tfplan
 
   summary:

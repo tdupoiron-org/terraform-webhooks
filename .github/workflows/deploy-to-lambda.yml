@@ -76,7 +76,7 @@ jobs:
         run: |
           echo "api_gateway_endpoint=${{ needs.lambda.outputs.api_gateway_endpoint }}"
           terraform init -backend-config=backend.conf -reconfigure
-          terraform plan -var "webhook_url=${{ needs.lambda.outputs.api_gateway_endpoint }}" -out=tfplan
+          terraform plan -var "webhook_url=${{ needs.lambda.outputs.api_gateway_endpoint }}/${{ needs.lambda.outputs.api_gateway_stage_name }}" -out=tfplan
           terraform apply -auto-approve tfplan
 
   summary:

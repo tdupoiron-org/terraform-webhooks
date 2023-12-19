@@ -1,4 +1,4 @@
-name: Deploy AWS lambda
+name: Deploy webhooks AWS
 
 on:
   workflow_dispatch:

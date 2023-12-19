@@ -16,3 +16,12 @@ module "github" {
   github_organization = var.github_organization
   github_webhook_url  = module.lambda.api_gateway_endpoint
 }
+
+module "elastic" {
+  source = "./modules/elastic"
+
+  aws_owner             = var.aws_owner
+  aws_region            = var.aws_region
+  aws_availability_zone = var.aws_availability_zone
+
+}

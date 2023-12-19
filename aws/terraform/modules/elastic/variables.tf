@@ -13,16 +13,14 @@ variable "aws_availability_zone" {
   type        = string
 }
 
-variable "lambda_package_path" {
-  description = "The path to the package"
+variable "aws_elastic_ami" {
+  description = "The AWS AMI to use for the elastic instance"
   type        = string
+  default     = "ami-0a74f2a50a208a8a8"
 }
 
-variable "lambda_package_name" {
-  description = "The name of the package"
+variable "aws_elastic_instance_type" {
+  description = "The AWS instance type to use for the elastic instance"
   type        = string
-}
-
-variable "github_organization" {
-  type = string
+  default     = "t2.xlarge"
 }

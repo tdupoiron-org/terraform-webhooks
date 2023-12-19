@@ -7,6 +7,6 @@ variable "github_organization" {
 }
 
 variable "github_webhook_url" {
-  type = string
+  type    = string
   default = "https://dummy.com"
 }

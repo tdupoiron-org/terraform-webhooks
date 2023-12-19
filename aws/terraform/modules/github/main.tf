@@ -1,7 +1,7 @@
 resource "github_organization_webhook" "webhook" {
 
   configuration {
-    url          = var.webhook_url
+    url          = var.github_webhook_url
     content_type = "form"
     insecure_ssl = false
   }

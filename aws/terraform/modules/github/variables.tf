@@ -2,11 +2,11 @@ variable "aws_region" {
   type = string
 }
 
-variable "organization" {
+variable "github_organization" {
   type = string
 }
 
-variable "webhook_url" {
+variable "github_webhook_url" {
   type = string
   default = "https://dummy.com"
 }

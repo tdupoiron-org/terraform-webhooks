@@ -17,7 +17,3 @@ variable "lambda_package_name" {
   description = "The name of the package"
   type        = string
 }
-
-variable "github_organization" {
-  type = string
-}

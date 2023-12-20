@@ -24,3 +24,15 @@ variable "aws_elastic_instance_type" {
   type        = string
   default     = "t2.xlarge"
 }
+
+variable "aws_elastic_master_username" {
+  description = "The AWS master username to use for the elastic instance"
+  type        = string
+  default     = "admin"
+}
+
+variable "aws_elastic_master_password" {
+  description = "The AWS master password to use for the elastic instance"
+  type        = string
+  default     = "changeme"
+}

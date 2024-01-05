@@ -47,3 +47,32 @@ resource "aws_route_table_association" "elastic_rt_association" {
   subnet_id      = aws_subnet.elastic_subnet.id
   route_table_id = aws_route_table.elastic_rtb.id
 }
+
+resource "aws_security_group" "elastic_sg" {
+  vpc_id = aws_vpc.elastic_vpc.id
+  name   = "${var.aws_owner}-elastic-sg"
+
+  ingress {
+    from_port   = 9200
+    to_port     = 9200
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+  ingress {
+    from_port   = 9300
+    to_port     = 9300
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = {
+    Name  = "${var.aws_owner}-elastic-sg"
+    Owner = var.aws_owner
+  }
+}

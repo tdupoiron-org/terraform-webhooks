@@ -8,88 +8,8 @@ resource "aws_ecs_cluster" "ecs_cluster" {
 }
 
 resource "aws_ecs_task_definition" "ecs_task_definition" {
-  family                   = "tdupoiron-elastic"
-  container_definitions    = <<TASK_DEFINITION
-  [
-    {
-      "name": "tdupoiron-elastic-task",
-      "image": "docker.elastic.co/elasticsearch/elasticsearch:8.11.3",
-      "essential": true,
-      "portMappings": [
-        {
-          "containerPort": 9200,
-          "hostPort": 9200,
-          "protocol": "tcp",
-          "name": "elastic-http"
-        },
-        {
-          "containerPort": 9300,
-          "hostPort": 9300,
-          "protocol": "tcp",
-          "name": "elastic-cluster"
-        }
-      ],
-      "cpu": 2048,
-      "memory": 4096,
-      "ulimits": [
-        {
-          "name": "nofile",
-          "softLimit": 1048576,
-          "hardLimit": 1048576
-        }
-      ],
-      "environment": [
-        {
-          "name": "discovery.type",
-          "value": "single-node"
-        },
-        {
-          "name": "cluster.name",
-          "value": "${var.aws_owner}-elastic"
-        },
-        {
-          "name": "bootstrap.memory_lock",
-          "value": "true"
-        },
-        {
-          "name": "ES_JAVA_OPTS",
-          "value": "-Xms2g -Xmx2g"
-        },
-        {
-          "name": "xpack.security.enabled",
-          "value": "false"
-        },
-        {
-          "name": "ES_NETWORK_HOST",
-          "value": "0.0.0.0"
-        }
-      ],
-      "healthCheck": {
-        "command": [
-          "CMD-SHELL",
-          "curl -f http://localhost:9200/_cluster/health || exit 1"
-        ],
-        "interval": 10,
-        "timeout": 5,
-        "retries": 3
-      },
-      "logConfiguration": {
-        "logDriver": "awslogs",
-        "options": {
-          "awslogs-group": "/ecs/${var.aws_owner}-elastic",
-          "awslogs-region": "eu-west-3",
-          "awslogs-stream-prefix": "ecs"
-        }
-      },
-      "tags": [
-        {
-          "key": "Owner",
-          "value": "${var.aws_owner}-elastic"
-        }
-      ]
-    }
-  ]
-  TASK_DEFINITION
+  family                = "tdupoiron-elastic"
+  container_definitions = templatefile("${path.module}/task-elasticsearch.json", { aws_owner = var.aws_owner })
 
   requires_compatibilities = ["FARGATE"]
   network_mode             = "awsvpc"
@@ -131,8 +51,8 @@ resource "aws_iam_role_policy_attachment" "ecsTaskExecutionRole_policy" {
 
 resource "aws_ecs_service" "elastic_service" {
   name            = "${var.aws_owner}-elastic-service"
-  cluster         = "${aws_ecs_cluster.ecs_cluster.id}"
-  task_definition = "${aws_ecs_task_definition.ecs_task_definition.arn}"
+  cluster         = aws_ecs_cluster.ecs_cluster.id
+  task_definition = aws_ecs_task_definition.ecs_task_definition.arn
   launch_type     = "FARGATE"
   desired_count   = 1
 

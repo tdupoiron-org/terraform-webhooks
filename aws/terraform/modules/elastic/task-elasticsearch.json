@@ -1,0 +1,79 @@
+[
+  {
+    "name": "tdupoiron-elastic-task",
+    "image": "docker.elastic.co/elasticsearch/elasticsearch:8.11.3",
+    "essential": true,
+    "portMappings": [
+      {
+        "containerPort": 9200,
+        "hostPort": 9200,
+        "protocol": "tcp",
+        "name": "elastic-http"
+      },
+      {
+        "containerPort": 9300,
+        "hostPort": 9300,
+        "protocol": "tcp",
+        "name": "elastic-cluster"
+      }
+    ],
+    "cpu": 2048,
+    "memory": 4096,
+    "ulimits": [
+      {
+        "name": "nofile",
+        "softLimit": 1048576,
+        "hardLimit": 1048576
+      }
+    ],
+    "environment": [
+      {
+        "name": "discovery.type",
+        "value": "single-node"
+      },
+      {
+        "name": "cluster.name",
+        "value": "${aws_owner}-elastic"
+      },
+      {
+        "name": "bootstrap.memory_lock",
+        "value": "true"
+      },
+      {
+        "name": "ES_JAVA_OPTS",
+        "value": "-Xms2g -Xmx2g"
+      },
+      {
+        "name": "xpack.security.enabled",
+        "value": "false"
+      },
+      {
+        "name": "ES_NETWORK_HOST",
+        "value": "0.0.0.0"
+      }
+    ],
+    "healthCheck": {
+      "command": [
+        "CMD-SHELL",
+        "curl -f http://localhost:9200/_cluster/health || exit 1"
+      ],
+      "interval": 10,
+      "timeout": 5,
+      "retries": 3
+    },
+    "logConfiguration": {
+      "logDriver": "awslogs",
+      "options": {
+        "awslogs-group": "/ecs/${aws_owner}-elastic",
+        "awslogs-region": "eu-west-3",
+        "awslogs-stream-prefix": "ecs"
+      }
+    },
+    "tags": [
+      {
+        "key": "Owner",
+        "value": "${aws_owner}-elastic"
+      }
+    ]
+  }
+]

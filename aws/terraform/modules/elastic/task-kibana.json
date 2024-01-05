@@ -1,20 +1,14 @@
 [
   {
-    "name": "tdupoiron-elasticsearch-task",
-    "image": "docker.elastic.co/elasticsearch/elasticsearch:8.11.3",
+    "name": "tdupoiron-kibana-task",
+    "image": "docker.elastic.co/kibana/kibana:8.11.3",
     "essential": true,
     "portMappings": [
       {
-        "containerPort": 9200,
-        "hostPort": 9200,
+        "containerPort": 5601,
+        "hostPort": 5601,
         "protocol": "tcp",
-        "name": "elasticsearch-http"
-      },
-      {
-        "containerPort": 9300,
-        "hostPort": 9300,
-        "protocol": "tcp",
-        "name": "elasticsearch-cluster"
+        "name": "kibana-http"
       }
     ],
     "cpu": 2048,
@@ -55,7 +49,7 @@
     "healthCheck": {
       "command": [
         "CMD-SHELL",
-        "curl -f http://localhost:5601/status || exit 1"
+        "curl -f http://localhost:9200/_cluster/health || exit 1"
       ],
       "interval": 10,
       "timeout": 5,
@@ -72,7 +66,7 @@
     "tags": [
       {
         "key": "Owner",
-        "value": "${aws_owner}-elasticsearch"
+        "value": "${aws_owner}-kibana"
       }
     ]
   }

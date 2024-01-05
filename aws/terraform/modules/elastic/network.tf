@@ -57,12 +57,14 @@ resource "aws_security_group" "elastic_sg" {
     to_port     = 9200
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
+    description = "Elasticsearch"
   }
   ingress {
-    from_port   = 9300
-    to_port     = 9300
+    from_port   = 5601
+    to_port     = 5601
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
+    description = "Kibana"
   }
   egress {
     from_port   = 0

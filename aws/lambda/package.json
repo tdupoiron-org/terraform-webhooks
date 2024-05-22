@@ -4,7 +4,8 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "build": "ncc build app.js --license licenses.txt -o dist"
+    "build": "ncc build app.js --license licenses.txt -o dist",
+    "zip": "zip -r dist/github_webhook_lambda.zip dist"
   },
   "author": "tdupoiron",
   "license": "ISC",

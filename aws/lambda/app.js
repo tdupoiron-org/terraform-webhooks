@@ -3,12 +3,15 @@ const http = require('http');
 exports.handler = async (event) => {
   let response = {
     statusCode: 200,
-    body: JSON.stringify("Hello from Lambda and Github!"),
+    body: JSON.stringify("Event received"),
   }
   
-  console.log(response);
-  
-  const data = JSON.stringify(event);
+  const parsedBody = JSON.parse(event.body);
+
+  const data = JSON.stringify({
+    '@timestamp': new Date(event.requestContext.requestTimeEpoch).toISOString(),
+    event: parsedBody
+  });
 
   const options = {
     hostname: 'elastic.dupoiron.com',
@@ -18,7 +21,6 @@ exports.handler = async (event) => {
     headers: {
       'Content-Type': 'application/json',
       'Content-Length': data.length,
-      'Authorization': 'Basic ' + Buffer.from('username:password').toString('base64')
     }
   }
 

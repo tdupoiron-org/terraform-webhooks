@@ -5,6 +5,7 @@
 2. Build lambda code
 
 ```shell
+cd aws/lambda
 npm ci
 npm run build
 npm run zip

@@ -32,14 +32,17 @@ exports.handler = async (event) => {
     })
   })
 
-req.on('error', error => {
-    const sanitizedError = error.toString().replace(/[\r\n]+/g, ' '); // Basic sanitization
-    console.error(sanitizedError);
+  req.on('error', error => {
+    // Sanitize the error message before logging
+    const sanitizedErrorMessage = error.message.replace(/[\r\n]+/g, ' ');
+    console.error(`An error occurred: ${sanitizedErrorMessage}`);
+    
+    // Ensure the response is properly constructed without directly including the error object
     response = {
       statusCode: 500,
-      body: JSON.stringify("An error occurred: " + error.message),
-    }
-  })
+      body: JSON.stringify(`An error occurred: ${sanitizedErrorMessage}`),
+    };
+  });
 
   req.write(data)
   req.end()

@@ -2,4 +2,4 @@
 node_modules
 tfplan
 *tfstate*
-aws/lambda/dist
+aws/lambda/dist/*.zip

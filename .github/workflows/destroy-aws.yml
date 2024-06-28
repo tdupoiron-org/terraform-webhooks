@@ -11,8 +11,11 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      GITHUB_TOKEN: ${{ secrets.ORG_GITHUB_TOKEN }}
+      JAVASCRIPT_SRC_DIR: ./aws/lambda
+      PACKAGE_DIR: ./aws/lambda/dist
+      PACKAGE_NAME: github_webhook_lambda.zip
       TERRAFORM_DIR: aws/terraform
+      GITHUB_TOKEN: ${{ secrets.ORG_GITHUB_TOKEN }}
 
     steps:
       - uses: actions/checkout@v4

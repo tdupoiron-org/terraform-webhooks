@@ -17,6 +17,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: zip
+        uses: montudor/action-zip@v1.0.0
+        with:
+          args: zip -qq -r ${{ env.PACKAGE_DIR  }}/${{ env.PACKAGE_NAME}} ${{ env.JAVASCRIPT_SRC_DIR }}
+
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
